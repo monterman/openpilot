@@ -140,6 +140,16 @@ class CarInterface(object):
       ret.mass = 4607 * CV.LB_TO_KG + std_cargo #mean between normal and hybrid limited
       ret.steerKpV, ret.steerKiV = [[0.6], [0.05]]
       ret.steerKf = 0.00006
+      
+    elif candidate == CAR.SIENNA:
+      ret.safetyParam = 100
+      ret.wheelbase = 3.03 # 119.3in =  3030.22mm
+      ret.steerRatio = 16.0
+      tire_stiffness_factor = 0.444 # not optimized yet
+      ret.mass = 4590 * CV.LB_TO_KG + std_cargo #mean between normal (4505) and limited (4750)
+      ret.steerKpV, ret.steerKiV = [[0.18], [0.0075]]
+      ret.steerKf = 0.0003
+
 
     ret.steerRateCost = 1.
     ret.centerToFront = ret.wheelbase * 0.44
@@ -151,7 +161,7 @@ class CarInterface(object):
     # to a negative value, so it won't matter.
     # hybrid models can't do stop and go even though the stock ACC can't
     if candidate in [CAR.PRIUS, CAR.RAV4H, CAR.LEXUS_RXH, CAR.CHR,
-                     CAR.CHRH, CAR.CAMRY, CAR.CAMRYH, CAR.HIGHLANDERH, CAR.HIGHLANDER]:
+                     CAR.CHRH, CAR.CAMRY, CAR.CAMRYH, CAR.HIGHLANDERH, CAR.HIGHLANDER, CAR.SIENNA]:
       ret.minEnableSpeed = -1.
     elif candidate in [CAR.RAV4, CAR.COROLLA]: # TODO: hack ICE to do stop and go
       ret.minEnableSpeed = 19. * CV.MPH_TO_MS
@@ -253,7 +263,7 @@ class CarInterface(object):
     ret.cruiseState.speed = self.CS.v_cruise_pcm * CV.KPH_TO_MS
     ret.cruiseState.available = bool(self.CS.main_on)
     ret.cruiseState.speedOffset = 0.
-    if self.CP.carFingerprint in [CAR.RAV4H, CAR.HIGHLANDERH, CAR.HIGHLANDER]:
+    if self.CP.carFingerprint in [CAR.RAV4H, CAR.HIGHLANDERH, CAR.HIGHLANDER, CAR.SIENNA]:
       # ignore standstill in hybrid vehicles, since pcm allows to restart without
       # receiving any special command
       ret.cruiseState.standstill = False
